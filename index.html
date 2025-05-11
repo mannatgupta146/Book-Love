@@ -14,8 +14,20 @@
             height: 100vh;
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; /* Prevent scrolling */
-            position: relative; /* Needed for absolute positioning of emojis */
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Added romantic background pattern */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(255,255,255,0.1)"><path d="M30,50 Q50,30 70,50 Q50,70 30,50"/></svg>');
+            opacity: 0.3;
         }
         
         #login-form {
@@ -23,11 +35,12 @@
             padding: 30px 40px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2),
+                        0 0 30px rgba(255, 77, 121, 0.3); /* Added glow */
             text-align: center;
             animation: fadeIn 1s ease-in-out;
             position: relative;
-            z-index: 10; /* Ensure form stays on top */
+            z-index: 10;
         }
         
         label {
@@ -38,7 +51,7 @@
         }
         
         input {
-            width: 100%;
+            width: 41%;
             padding: 15px;
             margin: 10px 0;
             border: none;
@@ -67,6 +80,7 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 15px;
+            animation: heartbeat 1.5s infinite; /* Added heartbeat */
         }
         
         button:hover {
@@ -79,12 +93,22 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Added heartbeat animation */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         /* Falling emoji animation */
         .falling-emoji {
             position: absolute;
             font-size: 2em;
             top: -50px;
             animation: fall linear infinite;
+            z-index: 1;
         }
 
         @keyframes fall {
@@ -92,48 +116,88 @@
             to { transform: translateY(100vh); }
         }
 
+        /* Added result styling */
+        #result {
+            color: white;
+            font-size: 18px;
+            margin-top: 15px;
+            min-height: 24px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        /* Added responsive design */
+        @media (max-width: 600px) {
+            #login-form {
+                width: 80%;
+                padding: 20px;
+            }
+            input {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <form id="login-form">
         <label for="code">Enter Your Name:</label>
-        <input type="text" id="code" name="code" placeholder="Your Name">
+        <input type="password" id="code" name="code" placeholder="Enter the code of my heart"> <!-- Updated placeholder -->
         <button id="submit-btn">Login</button>
+        <div id="result"></div>
     </form>
-    <div id="result"></div>
+
     <script>
         const form = document.getElementById('login-form');
         const codeInput = document.getElementById('code');
         const submitBtn = document.getElementById('submit-btn');
         const resultDiv = document.getElementById('result');
 
-        const secretCode = 'madamji'; // Replace with your secret code
-        const nextPageUrl = 'main.html'; // Replace with the URL of the new page
+        const secretCode = 'madamji';
+        const nextPageUrl = 'main.html';
 
+        // Enhanced celebration function
+        function showLoveConfetti() {
+            const emojis = ['❤️', '💖', '💘', '💕', '💞', '💓', '💗', '😍'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('falling-emoji');
+                confetti.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.fontSize = (Math.random() * 2 + 1) + 'em';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Original form submission with enhancements
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const userInput = codeInput.value.trim();
             if (userInput === secretCode) {
-                resultDiv.innerHTML = 'Hi madam ji welcome';
-                window.location.href = nextPageUrl; // Redirect to new page
+                showLoveConfetti();
+                resultDiv.innerHTML = 'Hi madam ji welcome ❤️';
+                setTimeout(() => {
+                    window.location.href = nextPageUrl;
+                }, 2000);
             } else {
-                resultDiv.innerHTML = 'Naa Tum meri madam ji nahi hoo kon hooo tum ';
+                resultDiv.innerHTML = 'Naa Tum meri madam ji nahi hoo kon hooo tum 😢';
             }
         });
 
-        // Function to create falling emojis
+        // Original falling emoji function
         function createFallingEmoji() {
             const emojis = ['❤️', '💖', '💘', '💕', '💞', '💓', '💗', '😍'];
             const emoji = document.createElement('div');
             emoji.classList.add('falling-emoji');
             emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
-            emoji.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Random speed for fall
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.animationDuration = (Math.random() * 3 + 2) + 's';
             document.body.appendChild(emoji);
-            setTimeout(() => emoji.remove(), 5000); // Remove emoji after it falls
+            setTimeout(() => emoji.remove(), 5000);
         }
 
-        // Generate falling emojis every 500ms
+        // Original emoji generation
         setInterval(createFallingEmoji, 500);
     </script>
 </body>
