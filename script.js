@@ -3,16 +3,21 @@ const codeInput = document.getElementById('code');
 const submitBtn = document.getElementById('submit-btn');
 const resultDiv = document.getElementById('result');
 
-const secretCode = 'madam'; // Replace with your secret code
-const nextPageUrl = 'main.html'; // Replace with the URL of the new page
+const secretCode = 'madam';
+const nextPageUrl = 'main.html';
 
 form.addEventListener('submit', (e) => {
 	e.preventDefault();
 	const userInput = codeInput.value.trim();
+	
 	if (userInput === secretCode) {
-		resultDiv.innerHTML = 'Baby';
-		window.location.href = nextPageUrl; // Redirect to new page
+		resultDiv.innerHTML = 'Madam Ji 💖 Redirecting...';
+		setTimeout(() => {
+			window.location.href = nextPageUrl;
+		}, 1000);
 	} else {
 		resultDiv.innerHTML = 'Naa tum meri madam ji nahi hoo, kon hooo tum?';
+		codeInput.value = '';
+		codeInput.focus();
 	}
 });
